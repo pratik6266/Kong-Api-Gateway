@@ -11,12 +11,12 @@ services:
         paths: ["/api/v1"]
         strip_path: false
 
-  # - name: echo-server2
-  #   url: http://golang-server2:3000
-  #   routes:
-  #     - name: echo2
-  #       paths: ["/api/v2"]
-  #       strip_path: false
+  - name: echo-server2
+    url: http://golang-server2:3000
+    routes:
+      - name: echo2
+        paths: ["/api/v2"]
+        strip_path: false
 
 consumers:
   - username: user
@@ -50,16 +50,16 @@ plugins:
       max_age: 3600
       preflight_continue: false
 
-  # - name: rate-limiting
-  #   service: echo-server
-  #   config:
-  #     minute: 5
-  #     policy: local
+  - name: rate-limiting
+    service: echo-server
+    config:
+      minute: 5
+      policy: local
 
-  # - name: ip-restriction
-  #   config:
-  #     deny:
-  #       - "192.168.1.27"
+  - name: ip-restriction
+    config:
+      deny:
+        - "192.168.1.27"
 
   - name: proxy-cache
     service: echo-server
@@ -78,27 +78,27 @@ plugins:
         X-Cache-Status: true
         age: true
 
-  # - name: basic-auth
-  #   service: echo-server
-  #   config:
-  #     hide_credentials: true
+  - name: basic-auth
+    service: echo-server
+    config:
+      hide_credentials: true
 
-  # - name: key-auth
-  #   service: echo-server2
-  #   config:
-  #     key_names: ["apikey"]   
-  #     hide_credentials: true
+  - name: key-auth
+    service: echo-server2
+    config:
+      key_names: ["apikey"]   
+      hide_credentials: true
 
-  # - name: request-termination # allows you to terminate requests based on specific conditions
-  #   service: echo-server2
-  #   config:
-  #     status_code: 403
-  #     message: "Access to this service is forbidden."
+  - name: request-termination # allows you to terminate requests based on specific conditions
+    service: echo-server2
+    config:
+      status_code: 403
+      message: "Access to this service is forbidden."
 
-  # - name: request-size-limiting # restricts the size of incoming requests
-  #   service: echo-server
-  #   config: 
-  #     allowed_payload_size: 1 # in bytes  
+  - name: request-size-limiting # restricts the size of incoming requests
+    service: echo-server
+    config: 
+      allowed_payload_size: 1 # in bytes  
 
   - name: file-log # logs requests and responses to a specified file
     config: 
