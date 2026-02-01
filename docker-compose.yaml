@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  kong:
+    image: kong
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "8444:8444"
+    volumes:
+      - ./config.yaml:/usr/local/kong/declarative/config.yaml
+      - ./ssl:/tmp/ssl
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: "/usr/local/kong/declarative/config.yaml"
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_SSL_CERT: "/tmp/ssl/cert.pem"
+      KONG_SSL_CERT_KEY: "/tmp/ssl/key.pem"
+    depends_on:
+      - golang-server
+      - golang-server2
+
+  golang-server:
+    build: ./golang-server
+    ports:
+      - "8080:8080"
+    environment:
+      - GIN_MODE=release
+  golang-server2:
+    build: 
+      context: ./golang-server
+      dockerfile: docker.local2
+    ports:
+      - "3000:3000"
+    environment:
+      - GIN_MODE=release
